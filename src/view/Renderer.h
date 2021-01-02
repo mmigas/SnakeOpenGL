@@ -16,8 +16,12 @@ private:
 
     VertexBufferLayout *bufferLayout;
     VertexBuffer vertexBuffer;
-    int counter;
 
+    void drawWalls(Level *level);
+
+    void drawSnake(Level *level);
+
+    void drawFood(Level *level);
 
     void createIndicesBuffer();
 
