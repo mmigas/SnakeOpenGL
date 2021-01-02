@@ -34,9 +34,9 @@ public:
     bool willSnakeEat();
 
 
-    std::vector<int> getXAvailable();
+    std::vector<int> getYAvailable();
 
-    std::vector<int> getYAvailable(int x);
+    std::vector<int> getXAvailable(int x);
 };
 
 

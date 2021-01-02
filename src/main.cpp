@@ -34,35 +34,34 @@ int main() {
     if (glewInit() != GLEW_OK) {
         std::cout << "Error!" << std::endl;
     }
-    {
-        Renderer *renderer = new Renderer();
 
-        /* Loop until the user closes the window */
-        while (!glfwWindowShouldClose(window)) {
-            double currentTime = glfwGetTime();
-            frames++;
+    Renderer *renderer = new Renderer();
 
-            if (currentTime - lastTime >= 0.15) {
-                printf("%f ms/frame\n", 150.0 / double(frames));
-                if (!level->update()) {
-                    break;
-                }
-                frames = 0;
-                lastTime += 0.150;
+    /* Loop until the user closes the window */
+    while (!glfwWindowShouldClose(window)) {
+        double currentTime = glfwGetTime();
+        frames++;
+
+        if (currentTime - lastTime >= 0.15) {
+            // printf("%f ms/frame\n", 150.0 / double(frames));
+            if (!level->update()) {
+                break;
             }
-
-            /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
-            renderer->draw(level);
-            /* Swap front and back buffers */
-            glfwSwapBuffers(window);
-
-            /* Poll for and process events */
-            glfwPollEvents();
-
+            frames = 0;
+            lastTime += 0.150;
         }
 
+        /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
+        renderer->draw(level);
+        /* Swap front and back buffers */
+        glfwSwapBuffers(window);
+
+        /* Poll for and process events */
+        glfwPollEvents();
+
     }
+    delete (renderer);
     glfwTerminate();
     return 0;
 }

@@ -31,7 +31,6 @@ void Level::createLevel() {
 
     for (Coordinates *i : *snake->getSegments()) {
         level->at(i->getY()).at(i->getX()) = 's';
-        std::cout << level->at(i->getY()).at(i->getX()) << std::endl;
     }
     spawnFood();
 }
@@ -46,12 +45,12 @@ bool Level::hasSnakeCollided() {
     return false;
 }
 
-std::vector<int> Level::getXAvailable() {
+std::vector<int> Level::getYAvailable() {
     std::vector<int> vector;
-    for (int i = 0; i < level->size(); i++) {
-        for (int j = 0; j < level->at(i).size(); j++) {
-            if (level->at(i).at(j) == 'f') {
-                vector.push_back(i);
+    for (int y = 0; y < level->size(); y++) {
+        for (int x = 0; x < level->at(y).size(); x++) {
+            if (level->at(y).at(x) == 'f') {
+                vector.push_back(y);
                 break;
             }
         }
@@ -59,11 +58,11 @@ std::vector<int> Level::getXAvailable() {
     return vector;
 }
 
-std::vector<int> Level::getYAvailable(int x) {
+std::vector<int> Level::getXAvailable(int y) {
     std::vector<int> vector;
-    for (int j = 0; j < level->at(x).size(); j++) {
-        if (level->at(x).at(j) == 'f') {
-            vector.push_back(j);
+    for (int x = 0; x < level->at(y).size(); x++) {
+        if (level->at(y).at(x) == 'f') {
+            vector.push_back(x);
         }
     }
     return vector;
@@ -73,13 +72,12 @@ std::vector<int> Level::getYAvailable(int x) {
 void Level::spawnFood() {
     int x;
     int y;
-    std::vector<int> xPossibilities = getXAvailable();
-    srand((unsigned) time(0));
-    x = xPossibilities.at(rand() % (xPossibilities.size() - 1));
-    std::vector<int> yPossibilities = getYAvailable(x);
-    srand((unsigned) time(0));
+    std::vector<int> yPossibilities = getYAvailable();
+    srand((unsigned) time(nullptr));
     y = yPossibilities.at(rand() % (yPossibilities.size() - 1));
-
+    std::vector<int> xPossibilities = getXAvailable(y);
+    srand((unsigned) time(nullptr));
+    x = xPossibilities.at(rand() % (xPossibilities.size() - 1));
     level->at(y).at(x) = 'a';
 }
 
@@ -91,8 +89,6 @@ bool Level::willSnakeEat() {
 
 
 bool Level::update() {
-    level->at(snake->getSegments()->at(snake->getSegments()->size() - 1)->getY()).at(
-            snake->getSegments()->at(snake->getSegments()->size() - 1)->getX()) = 'f';
     snake->changeDirection();
 
     if (willSnakeEat()) {
@@ -101,6 +97,8 @@ bool Level::update() {
         spawnFood();
         return true;
     } else {
+        level->at(snake->getSegments()->at(snake->getSegments()->size() - 1)->getY()).at(
+                snake->getSegments()->at(snake->getSegments()->size() - 1)->getX()) = 'f';
         snake->moveSnake();
     }
 
