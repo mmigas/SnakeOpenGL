@@ -61,7 +61,6 @@ int main() {
         glfwPollEvents();
 
     }
-    delete (renderer);
     glfwTerminate();
     return 0;
 }

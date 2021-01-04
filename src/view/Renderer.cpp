@@ -1,116 +1,61 @@
-#include <iostream>
 #include "Renderer.h"
 #include "ErrorCatcher.h"
 
+const float SQUARE_WIDTH = 30.0f;
+const float SQUARE_HEIGHT = 30.0f;
 
 Renderer::Renderer() {
-    bufferLayout = new VertexBufferLayout();
     vertexArray = new VertexArray();
-    bufferLayout->Push<float>(2);
-    vertexArray->AddBuffer(vertexBuffer, *bufferLayout);
-
+    vertexArray->AddNewBuffer(vertexBuffer);
     createIndicesBuffer();
-}
 
-void Renderer::drawWalls(Level *level) {
-    float positions[18 * 18 * 8];
-    int offset = 0;
-    int counter = 0;
-    for (int yy = 0; yy < level->getLevel()->size(); yy++) {
-        for (int xx = 0; xx < level->getLevel()->at(yy).size(); xx++) {
-            if (level->getLevel()->at(yy).at(xx) == 'w') {
-                float x = (xx + 1) * 30;
-                float y = (yy + 1) * 30;
-
-                positions[offset] = x - 15;
-                positions[offset + 1] = y - 15;
-                positions[offset + 2] = x + 15;
-                positions[offset + 3] = y - 15;
-                positions[offset + 4] = x + 15;
-                positions[offset + 5] = y + 15;
-                positions[offset + 6] = x - 15;
-                positions[offset + 7] = y + 15;
-                offset += 8;
-                counter += 1;
-            }
-        }
-    }
-    vertexBuffer.addData(positions, sizeof(positions), 0);
     Shader shader("../res/shaders/basic.shader");
     shader.bind();
-    shader.setUniform4f("u_Color", 0.8f, 0.8f, 0.8f, 1.0f);
-    vertexArray->bind();
-    indexBuffer->bind();
-    glDrawElements(GL_TRIANGLES, counter * 6, GL_UNSIGNED_INT, nullptr);
 }
 
-void Renderer::drawSnake(Level *level) {
-    float positions[level->getSnake()->getSegments()->size() * 8];
-    int offset = 0;
-    int counter = 0;
-    for (int yy = 0; yy < level->getLevel()->size(); yy++) {
-        for (int xx = 0; xx < level->getLevel()->at(yy).size(); xx++) {
-            if (level->getLevel()->at(yy).at(xx) == 's') {
-                float x = (xx + 1) * 30;
-                float y = (yy + 1) * 30;
-
-                positions[offset] = x - 15;
-                positions[offset + 1] = y - 15;
-                positions[offset + 2] = x + 15;
-                positions[offset + 3] = y - 15;
-                positions[offset + 4] = x + 15;
-                positions[offset + 5] = y + 15;
-                positions[offset + 6] = x - 15;
-                positions[offset + 7] = y + 15;
-                offset += 8;
-                counter += 1;
-            }
-        }
-    }
-    vertexBuffer.addData(positions, sizeof(positions), 0);
-    Shader shader("../res/shaders/basic.shader");
-    shader.bind();
-    shader.setUniform4f("u_Color", 0.0f, 1.0f, 0.0f, 1.0f);
-    vertexArray->bind();
-    indexBuffer->bind();
-    glDrawElements(GL_TRIANGLES, counter * 6, GL_UNSIGNED_INT, nullptr);
+void createVertex(Vertex *vertex, float x, float y, float r, float g, float b, float a) {
+    vertex->x = x;
+    vertex->y = y;
+    vertex->r = r;
+    vertex->g = g;
+    vertex->b = b;
+    vertex->a = a;
 }
 
-void Renderer::drawFood(Level *level) {
-    float positions[8];
-    int offset = 0;
-    for (int yy = 0; yy < level->getLevel()->size(); yy++) {
-        for (int xx = 0; xx < level->getLevel()->at(yy).size(); xx++) {
-            if (level->getLevel()->at(yy).at(xx) == 'a') {
-                float x = (xx + 1) * 30;
-                float y = (yy + 1) * 30;
-
-                positions[0] = x - 15;
-                positions[1] = y - 15;
-                positions[2] = x + 15;
-                positions[3] = y - 15;
-                positions[4] = x + 15;
-                positions[5] = y + 15;
-                positions[6] = x - 15;
-                positions[7] = y + 15;
-                break;
-            }
-        }
-    }
-    vertexBuffer.addData(positions, sizeof(positions), 0);
-    Shader shader("../res/shaders/basic.shader");
-    shader.bind();
-    shader.setUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
-    vertexArray->bind();
-    indexBuffer->bind();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+void createSquare(Vertex positions[], int offset, int x, int y, float r, float g, float b) {
+    createVertex(&positions[0 + offset], x * SQUARE_WIDTH, y * SQUARE_HEIGHT, r, g, b, 1.0f);
+    createVertex(&positions[1 + offset], x * SQUARE_WIDTH + SQUARE_WIDTH, y * SQUARE_HEIGHT, r, g, b, 1.0f);
+    createVertex(&positions[2 + offset], x * SQUARE_WIDTH + SQUARE_WIDTH, y * SQUARE_HEIGHT + SQUARE_HEIGHT, r, g,
+                 b, 1.0f);
+    createVertex(&positions[3 + offset], x * SQUARE_WIDTH, y * SQUARE_HEIGHT + SQUARE_HEIGHT, r, g, b, 1.0f);
 }
-
 
 void Renderer::draw(Level *level) {
-    drawWalls(level);
-    drawSnake(level);
-    drawFood(level);
+    Vertex positions[18 * 18 * 4];
+    int offset = 0;
+    int counter = 0;
+    for (int y = 0; y < level->getLevel()->size(); y++) {
+        for (int x = 0; x < level->getLevel()->at(y).size(); x++) {
+            if (level->getLevel()->at(y).at(x) == 'w') {
+                createSquare(positions, offset, x, y, 0.8f, 0.8f, 0.8f);
+                offset += 4;
+                counter += 1;
+            } else if (level->getLevel()->at(y).at(x) == 's') {
+                createSquare(positions, offset, x, y, 0, 0, 1);
+                offset += 4;
+                counter += 1;
+            } else if (level->getLevel()->at(y).at(x) == 'a') {
+                createSquare(positions, offset, x, y, 1, 0, 0);
+                offset += 4;
+                counter += 1;
+            }
+        }
+    }
+
+    vertexBuffer.addData(positions, sizeof(positions), 0 * sizeof(Vertex));
+    vertexArray->bind();
+    indexBuffer->bind();
+    glDrawElements(GL_TRIANGLES, counter * 6, GL_UNSIGNED_INT, nullptr);
 }
 
 void Renderer::createIndicesBuffer() {

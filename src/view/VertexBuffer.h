@@ -1,8 +1,14 @@
+#include <GL/glew.h>
+
 #pragma once
+
+struct Vertex {
+    float x, y;
+    float r, g, b, a;
+};
 
 class VertexBuffer {
 private:
-
     unsigned int m_RendererID{};
 public:
     VertexBuffer();

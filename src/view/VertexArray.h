@@ -1,5 +1,4 @@
 #include "VertexBuffer.h"
-#include "VertexBufferLayout.h"
 
 class VertexArray {
 private:
@@ -9,7 +8,7 @@ public:
 
     ~VertexArray();
 
-    void AddBuffer(const VertexBuffer &vertexBuffer, const VertexBufferLayout &bufferLayout);
+    void AddNewBuffer(const VertexBuffer &vertexBuffer) const;
 
     void bind() const;
 

@@ -4,7 +4,6 @@
 #include <ctime>
 #include "Level.h"
 
-
 Level::Level(int height, int width) {
     this->height = height;
     this->width = width;

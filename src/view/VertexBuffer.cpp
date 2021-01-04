@@ -1,11 +1,11 @@
-#include <GL/glew.h>
 #include "VertexBuffer.h"
 #include "ErrorCatcher.h"
+
 
 VertexBuffer::VertexBuffer() {
     GlCall(glGenBuffers(1, &m_RendererID));
     GlCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
-    GlCall(glBufferData(GL_ARRAY_BUFFER, 18 * 18 * 8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW));
+    GlCall(glBufferData(GL_ARRAY_BUFFER, 18 * 18 * 4 * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW));
 }
 
 
@@ -14,9 +14,9 @@ VertexBuffer::~VertexBuffer() {
 }
 
 
-void VertexBuffer:: addData(const void *data, unsigned int size, unsigned int offset) const {
+void VertexBuffer::addData(const void *data, unsigned int size, unsigned int offset) const {
     bind();
-    GlCall(glBufferSubData(GL_ARRAY_BUFFER, offset * sizeof(float), size, data));
+    GlCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
 }
 
 void VertexBuffer::bind() const {

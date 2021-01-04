@@ -14,14 +14,7 @@ private:
 
     IndexBuffer *indexBuffer;
 
-    VertexBufferLayout *bufferLayout;
     VertexBuffer vertexBuffer;
-
-    void drawWalls(Level *level);
-
-    void drawSnake(Level *level);
-
-    void drawFood(Level *level);
 
     void createIndicesBuffer();
 

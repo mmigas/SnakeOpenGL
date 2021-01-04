@@ -11,7 +11,7 @@ add_executable(SnakeOpenGL src/main.cpp src/model/Level.cpp src/model/Level.h
         src/view/VertexBuffer.cpp src/view/VertexBuffer.h
         src/view/Renderer.cpp src/view/Renderer.h
         src/view/VertexArray.cpp src/view/VertexArray.h
-        src/view/VertexBufferLayout.h src/view/Shader.cpp src/view/Shader.h src/model/Snake.cpp src/model/Snake.h src/view/ErrorCatcher.h)
+        src/view/Shader.cpp src/view/Shader.h src/model/Snake.cpp src/model/Snake.h src/view/ErrorCatcher.h)
 
 include_directories(Dependencies/GLFW/include)
 include_directories(Dependencies/GLEW/include)
